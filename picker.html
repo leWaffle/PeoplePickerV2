@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <!-- Inspired by http://desandro.github.io/3dtransforms/docs/carousel.html -->
+      <meta charset="utf-8">
+      <title>PeoplePickerv2</title>
+      <style media="screen">
+      #force-wrapper {
+         position: absolute;
+         top:50%;
+         left:50%;
+         height: 300px;
+         width: 300px;
+         margin: -150px 0px 0px -150px;
+         border: 1px solid;
+      }
+
+      body {
+         -moz-user-select: none;
+         -khtml-user-select: none;
+         -webkit-user-select: none;
+         user-select: none;
+      }
+
+      /*css transition curve that sloves towards the end*/
+
+      /* Use three different style of css easing functions to create different animations
+         undershoot
+         perfect
+         overshoot
+         */
+
+
+      </style>
+   </head>
+   <body>
+      <h1>People Picker</h1>
+      <h3>a.k.a Objective is Right!</h3>
+
+      <section class="container">
+         <div id="force-wrapper"></div>
+      </section>
+
+
+
+     <script>
+         function PeoplePicker ( people, root ) {
+            this.people = people;
+            this.rotation = 0;
+            this.panelCount = people.length;
+            this.theta = 0;
+
+            this.next = function next() {
+
+            }
+
+            function getRandom() {
+
+            }
+
+            function determineRotation() {
+
+            }
+
+            function save() {
+
+            }
+
+            function createPerson(person) {
+
+            }
+
+            function roundInertiaToPanel() {
+               //round the move to the next unselected person
+            }
+
+            function blip() {
+               //humour to make the wheel spin one more time
+            }
+         }
+
+         var init = function() {
+
+         };
+
+         function ForceWrapper() {
+            var begin;
+            var end;
+            this.start = function() {
+               begin = Date.now();
+            }
+
+            this.stop = function() {
+               end = Date.now();
+            }
+
+            function inertiaDegrees(time, distance) {
+               // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
+               //time seconds quicker = greater
+
+               //we want to keep it less that 5 rotations i.e 5 * 360
+            }
+
+            //Step two is to take into account upwards thrust
+            //document.getElementById('force-wrapper').addEventListener('mouseout',  ,false);
+            document.getElementById('force-wrapper').addEventListener('mousedown', this.start ,false);
+            //attach the mouse up to the document rather than this object
+            document.getElementById('force-wrapper').addEventListener('mouseup', this.stop ,false);
+         }
+
+         
+
+         window.addEventListener( 'DOMContentLoaded', init, false);
+      </script>
+   </body>
+</html>
