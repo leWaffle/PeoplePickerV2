@@ -155,7 +155,7 @@
 
   </style>
    </head>
-   <body class="animation2">
+   <body class="animation3">
       <h1>People Picker</h1>
       <h3>a.k.a Objective is Right!</h3>
 
@@ -283,11 +283,12 @@
          }
 
          function mousedown(evt) {
+            document.getElementsByTagName('body')[0].className = "";
             document.getElementsByTagName('body')[0].addEventListener('mousemove', movemouse, false);
          }
 
          function mouseup(evt) {
-                        document.getElementById('info').innerHTML = evt.target;
+            document.getElementsByTagName('body')[0].className = "animation3";
             document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
          }
 
@@ -297,15 +298,15 @@
 
          function roundToMultiple(numToRound, multiple) 
          { 
-          if(multiple == 0) 
-          { 
-           return numToRound; 
-          } 
+            if(multiple == 0) 
+            { 
+               return numToRound; 
+            } 
 
-          var remainder = numToRound % multiple;
-          if (remainder == 0)
-           return numToRound;
-          return numToRound + multiple - remainder;
+            var remainder = numToRound % multiple;
+            if (remainder == 0)
+               return numToRound;
+            return numToRound + multiple - remainder;
          } 
 
          function animate() {
@@ -317,8 +318,12 @@
             var element = document.getElementById('carousel');
             element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + rotation + 'deg)';
          }
+         function animationend() {
+            document.getElementById('info').innerHTML = "Animation finished";
+         }
 
 
+         document.getElementById('carousel').addEventListener("webkitTransitionEnd", animationend, false);
          
          document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
          document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
