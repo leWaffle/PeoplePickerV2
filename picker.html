@@ -30,17 +30,108 @@
          overshoot
          
          */
-
+      figure {
+         overflow: hidden;
+         margin: 0px;
+      }
 
       </style>
+
+      <style media="screen">
+
+    .container {
+      width: 210px;
+      height: 140px;
+      position: relative;
+      margin: calc(50% - 280px) auto;
+      border: 1px solid #CCC;
+      -webkit-perspective: 1100px;
+         -moz-perspective: 1100px;
+           -o-perspective: 1100px;
+              perspective: 1100px;
+    }
+
+
+    #carousel {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      -webkit-transform-style: preserve-3d;
+         -moz-transform-style: preserve-3d;
+           -o-transform-style: preserve-3d;
+              transform-style: preserve-3d;
+    }
+
+    .ready #carousel {
+      -webkit-transition: -webkit-transform 1s;
+         -moz-transition: -moz-transform 1s;
+           -o-transition: -o-transform 1s;
+              transition: transform 1s;
+    }
+
+    #carousel.panels-backface-invisible figure {
+      -webkit-backface-visibility: hidden;
+         -moz-backface-visibility: hidden;
+           -o-backface-visibility: hidden;
+              backface-visibility: hidden;
+    }
+
+    #carousel figure, #carousel div {
+      display: block;
+      position: absolute;
+      width: 260px;
+      height: 210px;
+      border: 2px solid black;
+      font-size: 80px;
+      line-height: 210px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ready #carousel figure {
+      -webkit-transition: opacity 1s, -webkit-transform 1s;
+         -moz-transition: opacity 1s, -moz-transform 1s;
+           -o-transition: opacity 1s, -o-transform 1s;
+              transition: opacity 1s, transform 1s;
+    }
+
+  </style>
    </head>
    <body>
       <h1>People Picker</h1>
       <h3>a.k.a Objective is Right!</h3>
 
-      <section class="container">
+<!--       <section class="container">
          <div id="force-wrapper"></div>
-      </section>
+      </section> -->
+
+      <section class="container">
+        <div id="carousel" style="-webkit-transform: translateZ(-288px) rotateX(0deg);">
+         <figure style="opacity: 1; background-color: rgba(255, 0, 0, 0.8); -webkit-transform: rotateX(0deg) translateZ(288px);">This is a long pice of text that will make it hard to keep this on one line and will most likelyneed to be elipsed</figure>
+         <div style="opacity: 1; background-color: rgba(255, 170, 0, 0.8); -webkit-transform: rotateX(40deg) translateZ(288px);">2</div>
+         <figure style="opacity: 1; background-color: rgba(170, 255, 0, 0.8); -webkit-transform: rotateX(80deg) translateZ(288px);">3</figure>
+         <figure style="opacity: 1; background-color: rgba(0, 255, 0, 0.8); -webkit-transform: rotateX(120deg) translateZ(288px);">4</figure>
+         <figure style="opacity: 1; background-color: rgba(0, 255, 170, 0.8); -webkit-transform: rotateX(160deg) translateZ(288px);">5</figure>
+         <figure style="opacity: 1; background-color: rgba(0, 170, 255, 0.8); -webkit-transform: rotateX(200deg) translateZ(288px);">6</figure>
+         <figure style="opacity: 1; background-color: rgba(0, 0, 255, 0.8); -webkit-transform: rotateX(240deg) translateZ(288px);">7</figure>
+         <figure style="opacity: 1; background-color: rgba(170, 0, 255, 0.8); -webkit-transform: rotateX(280deg) translateZ(288px);">8</figure>
+         <figure style="opacity: 1; background-color: rgba(255, 0, 170, 0.8); -webkit-transform: rotateX(320deg) translateZ(288px);">9</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">10</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">11</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">12</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">13</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">14</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">15</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">16</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">17</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">18</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">19</figure>
+         <figure style="opacity: 0; -webkit-transform: none;">20</figure>
+      </div>
+   </section>
 
 
 
@@ -80,6 +171,10 @@
             function blip() {
                //humour to make the wheel spin one more time
             }
+         }
+
+         function Person() {
+            //escape each name passed in
          }
 
          var init = function() {
