@@ -245,8 +245,27 @@
            return Math.floor(Math.random() * (max - min + 1)) + min;
          }
 
-         function animate() {
+         function roundToMultiple(numToRound, multiple) 
+         { 
+          if(multiple == 0) 
+          { 
+           return numToRound; 
+          } 
 
+          var remainder = numToRound % multiple;
+          if (remainder == 0)
+           return numToRound;
+          return numToRound + multiple - remainder;
+         } 
+
+         function animate() {
+            //Get a random place to go to
+            var rand = getRandomInt(0, 1080);
+            //round to the nearest angle for each face
+            var rotation = roundToMultiple(rand, 40);
+            document.getElementById('info').innerHTML = rotation;
+            var element = document.getElementById('carousel');
+            element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + rotation + 'deg)';
          }
 
 
@@ -257,7 +276,7 @@
          document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
          //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
 
-         window.addEventListener('dblclick', animate, true);
+         document.getElementsByTagName('body')[0].addEventListener('dblclick', animate, true);
 
          window.addEventListener( 'DOMContentLoaded', init, false);
 
