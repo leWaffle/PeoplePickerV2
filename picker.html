@@ -2,9 +2,14 @@
 <html lang="en">
    <head>
       <!-- Inspired by http://desandro.github.io/3dtransforms/docs/carousel.html -->
+      <link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+
       <meta charset="utf-8">
       <title>PeoplePickerv2</title>
       <style media="screen">
+      html {
+         font-family: 'Titillium Web', sans-serif;
+      }
       #force-wrapper {
          position: absolute;
          top:50%;
@@ -40,8 +45,8 @@
       <style media="screen">
 
     .container {
-      width: 210px;
-      height: 140px;
+      width: 260px;
+      height: 210px;
       position: relative;
       margin: calc(50% - 280px) auto;
       border: 1px solid #CCC;
@@ -133,7 +138,7 @@
       </div>
    </section>
 
-
+   <div id="info"></div>
 
      <script>
          function PeoplePicker ( people, root ) {
@@ -192,23 +197,65 @@
                end = Date.now();
             }
 
-            function inertiaDegrees(time, distance) {
-               // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
-               //time seconds quicker = greater
 
-               //we want to keep it less that 5 rotations i.e 5 * 360
-            }
 
             //Step two is to take into account upwards thrust
             //document.getElementById('force-wrapper').addEventListener('mouseout',  ,false);
             document.getElementById('force-wrapper').addEventListener('mousedown', this.start ,false);
             //attach the mouse up to the document rather than this object
             document.getElementById('force-wrapper').addEventListener('mouseup', this.stop ,false);
+         };
+
+         var lastmove = 0;
+         function movemouse(evt) {
+            document.getElementById('info').innerHTML = "screenX:" + evt.screenX +
+               "screenY:" +evt.screenY + 
+               "ClientX:" +evt.clientX +
+               "ClientY:" +evt.clientY +
+               "lastmove:" + lastmove;
+            var element = document.getElementById('carousel');
+            var currVal = element.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
+            //get current value 
+            if(evt.clientY < lastmove) {
+               currVal++;
+            } else {
+               currVal--;
+            }
+            element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
+            lastmove = evt.clientY;
+         };
+
+
+         function inertiaDegrees(time, distance) {
+            // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
+            //time seconds quicker = greater
+
+            //we want to keep it less that 5 rotations i.e 5 * 360
          }
 
+         function mousedown(evt) {
+            document.getElementsByTagName('body')[0].addEventListener('mousemove', movemouse, false);
+         }
+
+         function mouseup(evt) {
+            document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
+         }
+
+
          
+         document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
+         document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
+         document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, false);
 
          window.addEventListener( 'DOMContentLoaded', init, false);
+
+         //add remote storage so it works across any pc
+
+         //Grow animation that will show description of team once selected
+
+         //when animation finishes moving the 
+
+         //at the end all tiles move across the screen showing the description text and team name
       </script>
    </body>
 </html>
