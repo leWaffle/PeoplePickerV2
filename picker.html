@@ -218,7 +218,7 @@
             //get current value 
             if(evt.clientY < lastmove) {
                currVal++;
-            } else {
+            } else  if(evt.clientY > lastmove) {
                currVal--;
             }
             element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
@@ -241,11 +241,23 @@
             document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
          }
 
+         function getRandomInt (min, max) {
+           return Math.floor(Math.random() * (max - min + 1)) + min;
+         }
+
+         function animate() {
+
+         }
+
 
          
          document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
          document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
-         document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, false);
+         //THis doesn't capture leaving
+         window.addEventListener('mouseleave', mouseup, true);
+         document.getElementsByTagName('body')[0].addEventListener('mousein', mouseup, true);
+
+         window.addEventListener('dblclick', animate, true);
 
          window.addEventListener( 'DOMContentLoaded', init, false);
 
@@ -256,6 +268,7 @@
          //when animation finishes moving the 
 
          //at the end all tiles move across the screen showing the description text and team name
+         //use the sounds from MSPinball when going through frames
       </script>
    </body>
 </html>
