@@ -14,9 +14,9 @@
          position: absolute;
          top:50%;
          left:50%;
-         height: 300px;
+         height: 550px;
          width: 300px;
-         margin: -150px 0px 0px -150px;
+         margin: -27px 0px 0px -150px;
          border: 1px solid;
       }
 
@@ -109,9 +109,8 @@
       <h1>People Picker</h1>
       <h3>a.k.a Objective is Right!</h3>
 
-<!--       <section class="container">
-         <div id="force-wrapper"></div>
-      </section> -->
+      <!-- <div id="force-wrapper"></div> -->
+
 
       <section class="container">
         <div id="carousel" style="-webkit-transform: translateZ(-288px) rotateX(0deg);">
@@ -238,6 +237,7 @@
          }
 
          function mouseup(evt) {
+                        document.getElementById('info').innerHTML = evt.target;
             document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
          }
 
@@ -254,8 +254,8 @@
          document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
          document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
          //THis doesn't capture leaving
-         window.addEventListener('mouseleave', mouseup, true);
-         document.getElementsByTagName('body')[0].addEventListener('mousein', mouseup, true);
+         document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
+         //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
 
          window.addEventListener('dblclick', animate, true);
 
