@@ -246,7 +246,7 @@
                panels.push(panel);
             }, this);
 
-            carousel = Util.createElement('div', {"id":"carousel", "style": {"-webkit-transform" : "translateZ(" + radius +"px) rotateX(0deg)"}});
+            carousel = Util.createElement('div', {"id":"carousel", "style": {"-webkit-transform" : "translateZ(-" + radius +"px) rotateX(0deg)"}});
             panels.forEach(function(panel, index, array) {
                carousel.appendChild(panel.element);
             }, carousel);
