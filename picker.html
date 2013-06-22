@@ -231,6 +231,8 @@
          };
 
          function PeoplePicker ( names, container ) {
+
+
             var panels = [];
             var carousel;
             var panelCount = names.length;
@@ -260,31 +262,49 @@
 
 
          var init = function() {
-            var names = [
-               {'name': 1},
-               {'name': 2},
-               {'name': 3},
-               {'name': 4},
-               {'name': 5},
-               {'name': 6},
-               {'name': 7},
-               {'name': 8},
-               {'name': 9},
-               {'name': 10}
-            ];
-            var peoplePicker = new PeoplePicker(names, document.getElementById('container'));
+            var names = [];
+            for(var i = 1; i <= 30; i++) {
+               names.push({'name': i});
+            }
+            var pp = new PeoplePicker(names, document.getElementById('container'));
+
+
+            document.getElementById('carousel').addEventListener("webkitTransitionEnd", animationend, false);
+
+            document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
+            document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
+            //THis doesn't capture leaving
+            document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
+            //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
+
+            document.getElementsByTagName('body')[0].addEventListener('dblclick', animate, true);
          };
 
-         // function ForceWrapper() {
-         //    var begin;
-         //    var end;
-         //    this.start = function() {
-         //       begin = Date.now();
-         //    }
+         function Wrapper(container) {
+            this.container;
+            this.element;
+            var lastmove = 0;
+            function startTracking() {
 
-         //    this.stop = function() {
-         //       end = Date.now();
-         //    }
+            }
+
+            function stopTracking() {
+
+            }
+
+            this.track = function (evt) {
+               var element = document.getElementById('carousel');
+               var currVal = element.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
+               //get current value 
+               if(evt.clientY < lastmove) {
+                  currVal++;
+               } else  if(evt.clientY > lastmove) {
+                  currVal--;
+               }
+               element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
+               lastmove = evt.clientY;
+            }
+         }
 
 
 
@@ -295,83 +315,75 @@
          //    document.getElementById('force-wrapper').addEventListener('mouseup', this.stop ,false);
          // };
 
-         // var lastmove = 0;
-         // function movemouse(evt) {
-         //    document.getElementById('info').innerHTML = "screenX:" + evt.screenX +
-         //       "screenY:" +evt.screenY + 
-         //       "ClientX:" +evt.clientX +
-         //       "ClientY:" +evt.clientY +
-         //       "lastmove:" + lastmove;
-         //    var element = document.getElementById('carousel');
-         //    var currVal = element.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
-         //    //get current value 
-         //    if(evt.clientY < lastmove) {
-         //       currVal++;
-         //    } else  if(evt.clientY > lastmove) {
-         //       currVal--;
-         //    }
-         //    element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
-         //    lastmove = evt.clientY;
-         // };
+         var lastmove = 0;
+         function movemouse(evt) {
+            document.getElementById('info').innerHTML = "screenX:" + evt.screenX +
+               "screenY:" +evt.screenY + 
+               "ClientX:" +evt.clientX +
+               "ClientY:" +evt.clientY +
+               "lastmove:" + lastmove;
+            var element = document.getElementById('carousel');
+            var currVal = element.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
+            //get current value 
+            if(evt.clientY < lastmove) {
+               currVal++;
+            } else  if(evt.clientY > lastmove) {
+               currVal--;
+            }
+            element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
+            lastmove = evt.clientY;
+         };
 
 
-         // function inertiaDegrees(time, distance) {
-         //    // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
-         //    //time seconds quicker = greater
+         function inertiaDegrees(time, distance) {
+            // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
+            //time seconds quicker = greater
 
-         //    //we want to keep it less that 5 rotations i.e 5 * 360
-         // }
+            //we want to keep it less that 5 rotations i.e 5 * 360
+         }
 
-         // function mousedown(evt) {
-         //    document.getElementsByTagName('body')[0].className = "";
-         //    document.getElementsByTagName('body')[0].addEventListener('mousemove', movemouse, false);
-         // }
+         function mousedown(evt) {
+            document.getElementsByTagName('body')[0].className = "";
+            document.getElementsByTagName('body')[0].addEventListener('mousemove', movemouse, false);
+         }
 
-         // function mouseup(evt) {
-         //    document.getElementsByTagName('body')[0].className = "animation3";
-         //    document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
-         // }
+         function mouseup(evt) {
+            document.getElementsByTagName('body')[0].className = "animation3";
+            document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
+         }
 
-         // function getRandomInt (min, max) {
-         //   return Math.floor(Math.random() * (max - min + 1)) + min;
-         // }
+         function getRandomInt (min, max) {
+           return Math.floor(Math.random() * (max - min + 1)) + min;
+         }
 
-         // function roundToMultiple(numToRound, multiple) 
-         // { 
-         //    if(multiple == 0) 
-         //    { 
-         //       return numToRound; 
-         //    } 
+         function roundToMultiple(numToRound, multiple) 
+         { 
+            if(multiple == 0) 
+            { 
+               return numToRound; 
+            } 
 
-         //    var remainder = numToRound % multiple;
-         //    if (remainder == 0)
-         //       return numToRound;
-         //    return numToRound + multiple - remainder;
-         // } 
+            var remainder = numToRound % multiple;
+            if (remainder == 0)
+               return numToRound;
+            return numToRound + multiple - remainder;
+         } 
 
-         // function animate() {
-         //    //Get a random place to go to
-         //    var rand = getRandomInt(0, 1080);
-         //    //round to the nearest angle for each face
-         //    var rotation = roundToMultiple(rand, 40);
-         //    document.getElementById('info').innerHTML = rotation;
-         //    var element = document.getElementById('carousel');
-         //    element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + rotation + 'deg)';
-         // }
-         // function animationend() {
-         //    document.getElementById('info').innerHTML = "Animation finished";
-         // }
+         function animate() {
+            //Get a random place to go to
+            var rand = getRandomInt(0, 1080);
+            //round to the nearest angle for each face
+            var rotation = roundToMultiple(rand, 40);
+            document.getElementById('info').innerHTML = rotation;
+            var element = document.getElementById('carousel');
+            element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + rotation + 'deg)';
+         }
+         function animationend() {
+            document.getElementById('info').innerHTML = "Animation finished";
+         }
 
 
-         // document.getElementById('carousel').addEventListener("webkitTransitionEnd", animationend, false);
-         
-         // document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
-         // document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
-         // //THis doesn't capture leaving
-         // document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
-         // //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
 
-         // document.getElementsByTagName('body')[0].addEventListener('dblclick', animate, true);
 
          window.addEventListener( 'DOMContentLoaded', init, false);
 
@@ -396,7 +408,7 @@
                //get the inertial to apply based on movement
                //round the move to the next unselected person
                //choose a random easing
-
+         // zoom wheel out whilst spining and zoom in on selected name
       </script>
    </body>
 </html>
