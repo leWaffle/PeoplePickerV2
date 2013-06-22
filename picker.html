@@ -176,8 +176,8 @@
       <!-- <div id="force-wrapper"></div> -->
 
 
-      <section class="container">
-        <div id="carousel" style="-webkit-transform: translateZ(-288px) rotateX(0deg);">
+      <section id="container" class="container">
+<!--         <div id="carousel" style="-webkit-transform: translateZ(-288px) rotateX(0deg);">
          <figure style="opacity: 1; background-color: rgba(255, 0, 0, 0.8); -webkit-transform: rotateX(0deg) translateZ(288px);">This is a long pice of text that will make it hard to keep this on one line and will most likelyneed to be elipsed</figure>
          <div style="opacity: 1; background-color: rgba(255, 170, 0, 0.8); -webkit-transform: rotateX(40deg) translateZ(288px);">2</div>
          <figure style="opacity: 1; background-color: rgba(170, 255, 0, 0.8); -webkit-transform: rotateX(80deg) translateZ(288px);">3</figure>
@@ -198,154 +198,180 @@
          <figure style="opacity: 0; -webkit-transform: none;">18</figure>
          <figure style="opacity: 0; -webkit-transform: none;">19</figure>
          <figure style="opacity: 0; -webkit-transform: none;">20</figure>
-      </div>
+      </div> -->
    </section>
 
    <div id="info"></div>
 
-     <script>
-         function PeoplePicker ( people, root ) {
-            this.people = people;
-            this.rotation = 0;
-            this.panelCount = people.length;
-            this.theta = 0;
+      <script>
+         var Util = {
+            createElement : function (tag, details) {
+               var element = document.createElement(tag);
+               Util._setProps(element, details);
+               return element;
+            },
 
-            this.next = function next() {
-               //get the inertial to apply based on movement
-               //round the move to the next unselected person
-               //choose a random easing
+            _setProps : function(element, details, propPrefix) {
+               var objProps = Object.getOwnPropertyNames(details);
+               objProps.forEach(function(propName, index, array) {
+                  propDetails = Object.getOwnPropertyDescriptor(details, propName);
+                  //for the moment only support one level of recursion for
+                  //nested object in details
+                  if('object' === typeof propDetails.value && !propPrefix) {
+                     Util._setProps(element, propDetails.value, propName);
+                  } else {
+                     if(propPrefix) {
+                        element[propPrefix][propName] = propDetails.value;
+                     } else {
+                        element[propName] = propDetails.value;      
+                     }
+                  }
+               });
             }
+         };
 
-            function getRandom() {
+         function PeoplePicker ( names, container ) {
+            var panels = [];
+            var carousel;
+            var panelCount = names.length;
+            var panelSize = container.offsetHeight;
+            var panelTheta = 360 / panelCount;
 
-            }
+            // do some trig to figure out how big the carousel
+            // is in 3D space
+            var radius = Math.round( ( panelSize ) / Math.tan( Math.PI / panelCount ) );
 
-            function determineRotation() {
+            names.forEach(function(details, index, array) {
+               var panel = new Panel(details, index * panelTheta, radius);
+               panels.push(panel);
+            }, this);
 
-            }
+            carousel = Util.createElement('div', {"id":"carousel", "style": {"-webkit-transform" : "translateZ(" + radius +"px) rotateX(0deg)"}});
+            panels.forEach(function(panel, index, array) {
+               carousel.appendChild(panel.element);
+            }, carousel);
+            container.appendChild(carousel);
+         };
 
-            function save() {
+         function Panel(details, angle, radius) {
+            this.element = Util.createElement('figure', {"style": {'opacity' : 1, 'backgroundColor' : 'hsla(' + angle + ', 100%, 50%, 0.8)', '-webkit-transform' : 'rotateX(' + angle + 'deg) translateZ(' + radius + 'px)'}, 'innerHTML' : details.name});
+         };
 
-            }
 
-            function createPerson(person) {
-
-            }
-
-            function roundInertiaToPanel() {
-               
-            }
-
-            function blip() {
-               
-            }
-         }
-
-         function Person() {
-            //escape each name passed in
-         }
 
          var init = function() {
-
+            var names = [
+               {'name': 1},
+               {'name': 2},
+               {'name': 3},
+               {'name': 4},
+               {'name': 5},
+               {'name': 6},
+               {'name': 7},
+               {'name': 8},
+               {'name': 9},
+               {'name': 10}
+            ];
+            var peoplePicker = new PeoplePicker(names, document.getElementById('container'));
          };
 
-         function ForceWrapper() {
-            var begin;
-            var end;
-            this.start = function() {
-               begin = Date.now();
-            }
+         // function ForceWrapper() {
+         //    var begin;
+         //    var end;
+         //    this.start = function() {
+         //       begin = Date.now();
+         //    }
 
-            this.stop = function() {
-               end = Date.now();
-            }
-
-
-
-            //Step two is to take into account upwards thrust
-            //document.getElementById('force-wrapper').addEventListener('mouseout',  ,false);
-            document.getElementById('force-wrapper').addEventListener('mousedown', this.start ,false);
-            //attach the mouse up to the document rather than this object
-            document.getElementById('force-wrapper').addEventListener('mouseup', this.stop ,false);
-         };
-
-         var lastmove = 0;
-         function movemouse(evt) {
-            document.getElementById('info').innerHTML = "screenX:" + evt.screenX +
-               "screenY:" +evt.screenY + 
-               "ClientX:" +evt.clientX +
-               "ClientY:" +evt.clientY +
-               "lastmove:" + lastmove;
-            var element = document.getElementById('carousel');
-            var currVal = element.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
-            //get current value 
-            if(evt.clientY < lastmove) {
-               currVal++;
-            } else  if(evt.clientY > lastmove) {
-               currVal--;
-            }
-            element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
-            lastmove = evt.clientY;
-         };
+         //    this.stop = function() {
+         //       end = Date.now();
+         //    }
 
 
-         function inertiaDegrees(time, distance) {
-            // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
-            //time seconds quicker = greater
 
-            //we want to keep it less that 5 rotations i.e 5 * 360
-         }
+         //    //Step two is to take into account upwards thrust
+         //    //document.getElementById('force-wrapper').addEventListener('mouseout',  ,false);
+         //    document.getElementById('force-wrapper').addEventListener('mousedown', this.start ,false);
+         //    //attach the mouse up to the document rather than this object
+         //    document.getElementById('force-wrapper').addEventListener('mouseup', this.stop ,false);
+         // };
 
-         function mousedown(evt) {
-            document.getElementsByTagName('body')[0].className = "";
-            document.getElementsByTagName('body')[0].addEventListener('mousemove', movemouse, false);
-         }
-
-         function mouseup(evt) {
-            document.getElementsByTagName('body')[0].className = "animation3";
-            document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
-         }
-
-         function getRandomInt (min, max) {
-           return Math.floor(Math.random() * (max - min + 1)) + min;
-         }
-
-         function roundToMultiple(numToRound, multiple) 
-         { 
-            if(multiple == 0) 
-            { 
-               return numToRound; 
-            } 
-
-            var remainder = numToRound % multiple;
-            if (remainder == 0)
-               return numToRound;
-            return numToRound + multiple - remainder;
-         } 
-
-         function animate() {
-            //Get a random place to go to
-            var rand = getRandomInt(0, 1080);
-            //round to the nearest angle for each face
-            var rotation = roundToMultiple(rand, 40);
-            document.getElementById('info').innerHTML = rotation;
-            var element = document.getElementById('carousel');
-            element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + rotation + 'deg)';
-         }
-         function animationend() {
-            document.getElementById('info').innerHTML = "Animation finished";
-         }
+         // var lastmove = 0;
+         // function movemouse(evt) {
+         //    document.getElementById('info').innerHTML = "screenX:" + evt.screenX +
+         //       "screenY:" +evt.screenY + 
+         //       "ClientX:" +evt.clientX +
+         //       "ClientY:" +evt.clientY +
+         //       "lastmove:" + lastmove;
+         //    var element = document.getElementById('carousel');
+         //    var currVal = element.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
+         //    //get current value 
+         //    if(evt.clientY < lastmove) {
+         //       currVal++;
+         //    } else  if(evt.clientY > lastmove) {
+         //       currVal--;
+         //    }
+         //    element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + currVal + 'deg)';
+         //    lastmove = evt.clientY;
+         // };
 
 
-         document.getElementById('carousel').addEventListener("webkitTransitionEnd", animationend, false);
+         // function inertiaDegrees(time, distance) {
+         //    // inertia distance = (moveDistance * timeSeconds) + (numberOfPanels * weight per panel)
+         //    //time seconds quicker = greater
+
+         //    //we want to keep it less that 5 rotations i.e 5 * 360
+         // }
+
+         // function mousedown(evt) {
+         //    document.getElementsByTagName('body')[0].className = "";
+         //    document.getElementsByTagName('body')[0].addEventListener('mousemove', movemouse, false);
+         // }
+
+         // function mouseup(evt) {
+         //    document.getElementsByTagName('body')[0].className = "animation3";
+         //    document.getElementsByTagName('body')[0].removeEventListener('mousemove', movemouse, false);
+         // }
+
+         // function getRandomInt (min, max) {
+         //   return Math.floor(Math.random() * (max - min + 1)) + min;
+         // }
+
+         // function roundToMultiple(numToRound, multiple) 
+         // { 
+         //    if(multiple == 0) 
+         //    { 
+         //       return numToRound; 
+         //    } 
+
+         //    var remainder = numToRound % multiple;
+         //    if (remainder == 0)
+         //       return numToRound;
+         //    return numToRound + multiple - remainder;
+         // } 
+
+         // function animate() {
+         //    //Get a random place to go to
+         //    var rand = getRandomInt(0, 1080);
+         //    //round to the nearest angle for each face
+         //    var rotation = roundToMultiple(rand, 40);
+         //    document.getElementById('info').innerHTML = rotation;
+         //    var element = document.getElementById('carousel');
+         //    element.style[ '-webkit-transform' ] = 'translateZ(-288px) rotateX(' + rotation + 'deg)';
+         // }
+         // function animationend() {
+         //    document.getElementById('info').innerHTML = "Animation finished";
+         // }
+
+
+         // document.getElementById('carousel').addEventListener("webkitTransitionEnd", animationend, false);
          
-         document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
-         document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
-         //THis doesn't capture leaving
-         document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
-         //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
+         // document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
+         // document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
+         // //THis doesn't capture leaving
+         // document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
+         // //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
 
-         document.getElementsByTagName('body')[0].addEventListener('dblclick', animate, true);
+         // document.getElementsByTagName('body')[0].addEventListener('dblclick', animate, true);
 
          window.addEventListener( 'DOMContentLoaded', init, false);
 
@@ -364,6 +390,13 @@
          // When spinning capture direction and velocity
 
          //{'direction':'', start:'', stop:'', delta:'', velocity:''}
+
+         //save function with local storage
+
+               //get the inertial to apply based on movement
+               //round the move to the next unselected person
+               //choose a random easing
+
       </script>
    </body>
 </html>
