@@ -239,7 +239,7 @@
 
             // do some trig to figure out how big the carousel
             // is in 3D space
-            var radius = Math.round( ( panelSize ) / Math.tan( Math.PI / panelCount ) );
+            var radius = Math.round( ( panelSize / 2) / Math.tan( Math.PI / panelCount ) );
 
             names.forEach(function(details, index, array) {
                var panel = new Panel(details, index * panelTheta, radius);
