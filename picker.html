@@ -9,6 +9,11 @@
       <style media="screen">
       html {
          font-family: 'Titillium Web', sans-serif;
+         -moz-user-select: none;
+         -khtml-user-select: none;
+         -webkit-user-select: none;
+         user-select: none;
+         overflow: hidden;
       }
       #force-wrapper {
          position: absolute;
@@ -21,11 +26,7 @@
       }
 
       body {
-         -moz-user-select: none;
-         -khtml-user-select: none;
-         -webkit-user-select: none;
-         user-select: none;
-         overflow: hidden;
+
       }
 
       figure {
@@ -163,7 +164,9 @@
       color: white;
       text-align: center;
       text-overflow: ellipsis;
-      white-space: nowrap;
+     /* white-space: nowrap;*/
+      word-wrap: break-word;
+      word-break: break-all;
     }
 
     .ready #carousel figure {
@@ -363,6 +366,7 @@
             for(var i = 1; i <= 10; i++) {
                names.push({'name': i+ Math.random()});
             }
+            names.push({'name': 'askjhaksdhakshdaksdhaslhjdashdjasdhaksldkajhsdkahjsdklahdalsdhajdhajdhakdhaksjdhaskjdhaskhdaskhdaskdlahjsdlkajhsdlkahsdakjhdakjhdasljdhaslkjhsda'})
             var pp = new PeoplePicker(names, document.getElementById('container'));
          };
 
