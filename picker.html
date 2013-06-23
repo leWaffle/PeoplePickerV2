@@ -25,6 +25,8 @@
          -khtml-user-select: none;
          -webkit-user-select: none;
          user-select: none;
+         overflow: hidden;
+         height: 100%;
       }
 
       /*css transition curve that sloves towards the end*/
@@ -262,6 +264,14 @@
             this.getRotation = function() {
                return carousel.style[ '-webkit-transform' ].match('rotateX\\(([-]?\\d+)')[1];
             };
+
+            this.animate = function() {
+               //Get a random place to go to
+               var rand = Util.getRandomInt(0, 3*360);
+               //round to the nearest angle for each face
+               var rotation = Util.roundToMultiple(rand, panelTheta);
+               this.setRotation(rotation);
+            }
          };
 
          function Panel(details, angle, radius) {
@@ -274,17 +284,6 @@
                names.push({'name': i});
             }
             var pp = new PeoplePicker(names, document.getElementById('container'));
-
-
-            // document.getElementById('carousel').addEventListener("webkitTransitionEnd", animationend, false);
-
-            // document.getElementsByTagName('body')[0].addEventListener('mousedown', mousedown, false);
-            // document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseup, false);
-            // //THis doesn't capture leaving
-            // document.getElementsByTagName('body')[0].addEventListener('mouseout', mouseup, true);
-            // //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
-
-            // document.getElementsByTagName('body')[0].addEventListener('dblclick', animate, true);
          };
 
          function InertiaField(parent) {
@@ -299,6 +298,7 @@
             this.stopTracking = function(evt) {
                document.getElementsByTagName('body')[0].className = "animation3";
                evt.target.removeEventListener('mousemove', track, false);
+               parent.animate();
             };
 
             var track = function (evt) {
