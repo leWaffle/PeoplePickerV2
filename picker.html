@@ -112,10 +112,13 @@
          left: 0px;
          right: 0px;
       }
+      .container,
+      #carousel figure {
+         width: 460px;
+         height: 410px;
+      }
 
     .container {
-      width: 260px;
-      height: 210px;
       position: relative;
       margin: calc(50% - 420px) auto;
       border: 1px solid #CCC;
@@ -153,8 +156,6 @@
     #carousel figure, #carousel div {
       display: block;
       position: absolute;
-      width: 260px;
-      height: 210px;
       border: 2px solid black;
       font-size: 80px;
       line-height: 210px;
@@ -360,7 +361,7 @@
          var init = function() {
             var names = [];
             for(var i = 1; i <= 10; i++) {
-               names.push({'name': i});
+               names.push({'name': i+ Math.random()});
             }
             var pp = new PeoplePicker(names, document.getElementById('container'));
          };
