@@ -228,6 +228,10 @@
                return numToRound + multiple - remainder;
             },
 
+            randomise : function() {
+               return (Math.round(Math.random())-0.5);
+            },
+
             scope : function(func, scope) {
                function hook(){
                   func();
@@ -248,12 +252,15 @@
             // is in 3D space
             var radius = Math.round( ( panelSize / 2) / Math.tan( Math.PI / panelCount ) );
 
+            names.sort(Util.randomise);
+
             names.forEach(function(details, index, array) {
                var panel = new Panel(details, index * panelTheta, radius);
                panels.push(panel);
             }, this);
 
             carousel = Util.createElement('div', {"id":"carousel", "style": {"-webkit-transform" : "translateZ(-" + radius +"px) rotateX(0deg)"}});
+
             panels.forEach(function(panel, index, array) {
                carousel.appendChild(panel.element);
             }, carousel);
@@ -277,7 +284,7 @@
                //Get a random place to go to
                var rand = Util.getRandomInt(0, 3*360);
                //round to the nearest angle for each face
-               var rotation = Util.roundToMultiple(rand, panelTheta);
+               var rotation = Util.roundToMultiple(rand / timeDelta, panelTheta);
                this.setRotation(rotation * direction);
             };
 
@@ -319,7 +326,7 @@
             this.stopTracking = function(evt) {
                this.stop=Date.now();
                evt.target.removeEventListener('mousemove', track, false);
-               evt.target.removeEventListener('mousemove', track, false);
+               evt.target.removeEventListener('mouseout', track, false);
                parent.animate(direction, this.stop - this.start);
             };
 
