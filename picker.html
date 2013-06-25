@@ -239,11 +239,7 @@
             },
 
             scope : function(func, scope) {
-               function hook(){
-                  func();
-               }(scope);
-
-               return hook;
+               return function(){ return func.apply(scope, arguments || []); }
             }
          };
 
@@ -278,6 +274,7 @@
             container.appendChild(carousel);
 
             var ineritaField = new InertiaField(this, container);
+            ineritaField.start();
 
             this.setRotation = function(rotation) {
                carousel.style[ '-webkit-transform' ] = 'translateZ(-' + radius + 'px) rotateX(' + rotation + 'deg)';
@@ -337,21 +334,39 @@
             this.element = Util.createElement('div', {"id":"inertial-wrapper"});
             var lastmove = 0;
             var direction = 0;
-            this.start;
-            this.stop;
+            this.begin;
+            this.end;
 
             this.startTracking  = function (evt) {
-               this.start = Date.now();
+               this.begin = Date.now();
+               this.enableTracking(evt.target);
                parent.disableAnimation();
-               evt.target.addEventListener('mousemove', track, false);
-               evt.target.addEventListener('mouseout', this.stopTracking, true);
             };
 
             this.stopTracking = function(evt) {
-               this.stop=Date.now();
-               evt.target.removeEventListener('mousemove', track, false);
-               evt.target.removeEventListener('mouseout', track, false);
+               this.end=Date.now();
+               this.disableTracking(evt.target);
                parent.animate(direction, this.stop - this.start);
+            };
+
+            this.enableTracking = function(el) {
+               el.addEventListener('mousemove', Util.scope(track, this), false);
+               el.addEventListener('mouseout', Util.scope(this.stopTracking, this), true);
+            };
+
+            this.disableTracking = function(el) {
+               el.removeEventListener('mousemove', track, false);
+               el.removeEventListener('mouseout', this.stopTracking, false);
+            };
+
+            this.start = function() {
+               this.element.addEventListener('mousedown', Util.scope(this.startTracking, this), false);
+               this.element.addEventListener('mouseup', Util.scope(this.stopTracking, this), false);
+            };
+
+            this.stop = function() {
+               this.element.removeEventListener('mousedown', this.startTracking, false);
+               this.element.removeEventListener('mouseup', this.stopTracking, false);
             };
 
             var track = function (evt) {
@@ -368,17 +383,8 @@
                lastmove = evt.clientY;
             };
 
-
-            // parentElement.addEventListener("webkitTransitionEnd", animationend, false);
-
-            this.element.addEventListener('mousedown', this.startTracking, false);
-            this.element.addEventListener('mouseup', this.stopTracking, false);
-            //This doesn't capture leaving
-            
-            //document.getElementsByTagName('body')[0].addEventListener('mouseover', mouseup, true);
-            //this.element.addEventListener('dblclick', animate, true);
-
-            document.getElementsByTagName('body')[0].appendChild(this.element);
+            var body = document.getElementsByTagName('body')[0];
+            body.appendChild(this.element);
          };
 
          var init = function() {
