@@ -249,6 +249,7 @@
 
          function PeoplePicker ( names, container ) {
             var panels = [];
+            var unselectedAngles = [];
             var carousel;
             var panelCount = names.length;
             var panelSize = container.offsetHeight;
@@ -263,6 +264,7 @@
             names.forEach(function(details, index, array) {
                var panel = new Panel(details, index * panelTheta, radius);
                panels.push(panel);
+               unselectedAngles.push(panel.angle);
             }, this);
 
             carousel = Util.createElement('div', {"id":"carousel", "style": {"-webkit-transform" : "translateZ(-" + radius +"px) rotateX(0deg)"}});
@@ -286,33 +288,49 @@
             };
 
             this.animate = function(direction, timeDelta) {   
-               this.enableAnimation();            
-               //Get a random place to go to
-               var rand = Util.getRandomInt(0, 3*360);
-               //round to the nearest angle for each face
-               var rotation = Util.roundToMultiple(rand / timeDelta, panelTheta);
+               var animationName = "animation" + Util.getRandomInt(1,3);
+               //Use the speed and distance of the input roation to affect the selected person...eventually
+               var selectedAngle = this.getPresenterAngle(Util.roundToMultiple(timeDelta, panelTheta))
+
+               //Get a random number of rotations
+               var rand = Util.getRandomInt(2*360, 5*360);
+               //From the current rotation recentre the random spin to 0 in the traveling direction
+               var adjustedOrigin = this.getRotation() ;
+               rand = Util.roundToMultiple((rand ), 360);
+
+               var rotation = rand + selectedAngle;
+               console.debug('D:', direction, 'S:', selectedAngle,'C:', this.getRotation(), '0:', adjustedOrigin, 'R:', rotation, 'A:', animationName);
+
+               this.enableAnimation(animationName);
                this.setRotation(rotation * direction);
+            };
+
+            this.getPresenterAngle = function(seed) {
+               var selectedIndex = Util.getRandomInt(0, unselectedAngles.length-1);
+               return unselectedAngles.splice(selectedIndex, 1)[0];
             };
 
             this.disableAnimation = function() {
                document.getElementsByTagName('body')[0].className = "";
 
             };
-            this.enableAnimation = function() {
-               var animationName = "animation" + Util.getRandomInt(1,3);
+            this.enableAnimation = function(animationName) {
                document.getElementsByTagName('body')[0].className = animationName;
-               console.debug('Animation: ' + animationName);
             };
 
             this.animationEnd = function() {
             //   this.disableAnimation();
-               console.debug('Animation stopped.')
+               console.debug('Animation stopped.');
+               if(unselectedAngles.length == 0) {
+                  //display all names
+               }
             };
 
          };
 
          function Panel(details, angle, radius) {
             this.element = Util.createElement('figure', {"style": {'opacity' : 1, 'backgroundColor' : 'hsla(' + angle + ', 100%, 50%, 0.8)', '-webkit-transform' : 'rotateX(' + angle + 'deg) translateZ(' + radius + 'px)'}, 'innerHTML' : details.name});
+            this.angle = angle;
          };
 
          function InertiaField(parent) {
@@ -365,7 +383,7 @@
 
          var init = function() {
             var names = [];
-            for(var i = 1; i <= 10; i++) {
+            for(var i = 1; i <= 11; i++) {
                names.push({'name': i+ Math.random()});
             }
             names.push({'name': 'askjhaksdhakshdaksdhaslhjdashdjasdhaksldkajhsdkahjsdklahdalsdhajdhajdhakdhaksjdhaskjdhaskhdaskhdaskdlahjsdlkajhsdlkahsdakjhdakjhdasljdhaslkjhsda'})
